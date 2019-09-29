@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Word Guess</title>
+
+    <link rel="stylesheet" href="assets/css/reset.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <p>PRESS SPACE BAR TO BEGIN!</p>
+
+    <p>WINS: <span id="wins"></span></p>
+
+    <p>CURRENT WORD</p>
+    <!-- <P><span id="guessesRemaining"></span></P> -->
+
+    <p>GUESSES REMAINING: <span id="guessesRemaining"></span></p>
+
+    <p GUESSED CHARACTERS><span id="guessedCharacters"></span></p>
+
+    <script>
+        var bandNames = [
+            "Iron Maiden", 
+            "Motorhead", 
+            "Scorpions"
+        ];
+
+        var chosenBandName;
+        var guessedCharacters = ["a"];
+        var guessesRemaining = 0;
+        var inGame = false;
+        var wins = 0;
+
+        document.onkeypress = function(event) {
+            //Variable is set to lower case ascii code of keypress
+            var userGuess = event.key.toLowerCase().charCodeAt(0);
+
+            //Starts game if not already started
+            if (inGame === false && userGuess === 32) {
+                inGame = true;
+                chosenBandName =
+                bandNames[Math.floor(Math.random() * bandNames.length)];
+            }
+
+            //If game was previously running
+            else if (inGame === true) {
+
+                //Tests if key pressed was a letter key
+                if (userGuess >= 97 && userGuess <= 122) {
+                    var character;
+                    var index = 0;
+
+                    //Loop through each character in chosenBandName
+                    for (character of chosenBandName) {
+
+                        //Test if user character matches character in chosenBandName
+                        if (character.toLowerCase() === String.fromCharCode(userGuess)) {
+                            console.log(index);
+                        }
+                        index++;
+                    }
+                }
+            }
+        };
+
+        // document.getElementById("wins").innerHTML = wins ;
+        // document.getElementById("guessesRemaining").innerHTML = guessesRemaining ;
+        // document.getElementById("guessedCharacters").innerHTML = guessedCharacters[0] ;
+    </script>
+  </body>
+</html>
