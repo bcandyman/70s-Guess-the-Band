@@ -1,8 +1,11 @@
 // Variables
 var bandNames = [
     "Iron Maiden",
+    "Judas Priest",
     "Motorhead",
-    "Scorpions"
+    "Rush",
+    "Scorpions",
+    "Thin Lizzy"
 ];
 
 var chosenBandName;
@@ -35,6 +38,19 @@ function populateID (str, ID, appendMode){
     }
 }
 
+function clearDocument(){
+    inGame = false ;
+    chosenBandName = "" ;
+    correctCharacters = [] ;
+    incorrectCharacters = [] ;
+    populateID("", "currentWord", false) ;
+    populateID("", "guessedCharacters", false) ;
+    populateID("", "guessesRemaining", false) ;
+    document.getElementById("startGame").style.visibility = "initial" ;
+
+    // document.location.reload(false) ;
+}
+
 
 //
 document.onkeypress = function(event) {
@@ -56,6 +72,7 @@ document.onkeypress = function(event) {
             else{
                 populateID("_", "currentWord", true)
             }
+        document.getElementById("startGame").style.visibility = "hidden" ;
             
         }
     }
@@ -97,6 +114,11 @@ document.onkeypress = function(event) {
                         populateID(", ", "guessedCharacters", true)
                     }
                     populateID(incorrectCharacters[incorrectCharacters.length - 1], "guessedCharacters", true)
+
+                    if (guessesRemaining === 0){
+                        alert("Brr... You ran out of tries. Please try again.")
+                        clearDocument()
+                    }
                     //decrement guessesRemaining and update html document
                     guessesRemaining--
                     populateID(guessesRemaining, "guessesRemaining", false)
@@ -106,6 +128,9 @@ document.onkeypress = function(event) {
     }
     if (chosenBandName === document.getElementById("currentWord").innerHTML){
         alert("You did it!!")
+        clearDocument()
+        wins++
+        populateID(wins, "wins", false)
     }
 }
 
