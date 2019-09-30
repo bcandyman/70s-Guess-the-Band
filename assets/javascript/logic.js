@@ -1,8 +1,8 @@
 // Variables
 var bandNames = [
-    "IRON MAIDEN",
-    "MOTORHEAD",
-    "SCORPIONS"
+    "Iron Maiden",
+    "Motorhead",
+    "Scorpions"
 ];
 
 var chosenBandName;
@@ -15,17 +15,13 @@ var incorrectCharacters = [] ;
 
 
 // Functions
-function inArr(arr,charCode,addToArray){
-    var wasInArr = arr.includes(String.fromCharCode(charCode));
-    if (arr.includes(String.fromCharCode(charCode))){
+function inArr(arr,char,addToArray){
+    var wasInArr = arr.includes(char) ;
+    if (arr.includes(char)){
         console.log("Character was in array")
     }
     else{
         console.log("Character was not in array")
-        // if (addToArray){
-            // console.log("Character is being saved into array")
-            // arr.push(String.fromCharCode(charCode)) ;
-        // }
     }
     return wasInArr
 }
@@ -43,14 +39,18 @@ function populateID (str, ID, appendMode){
 //
 document.onkeypress = function(event) {
     //Variable is set to lower case ascii code of keypress
-    var userGuess = event.key.charCodeAt(0);
+    var userGuessCode = event.key.toUpperCase().charCodeAt(0);
+    var userGuess = String.fromCharCode(userGuessCode)
 
     //Starts game if not already started
-    if (inGame === false && userGuess === 32) {
+    if (inGame === false && userGuess === " ") {
         inGame = true;
+        //chooses word to guess
         chosenBandName = bandNames[Math.floor(Math.random() * bandNames.length)];
+        //populates underlines and spaces on html document
         for(var i = 0; i < chosenBandName.length; i++){
             if (chosenBandName.charAt(i) === " "){
+                console.log("band name has a space")
                 populateID(" ", "currentWord", true)
             }
             else{
@@ -58,60 +58,54 @@ document.onkeypress = function(event) {
             }
             
         }
-        console.log("Game has begun!")
-        console.log (chosenBandName)
     }
 
     //If game was previously running
     else if (inGame === true) {
 
         //Tests if key pressed was a letter key
-        if ((userGuess >= 97 && userGuess <= 122) || (userGuess >= 65 && userGuess <= 90)) {
+        if (userGuessCode >= 65 && userGuessCode <= 90) {
 
             //Test if character selected has NOT already been selected.
             if (!inArr(correctCharacters,userGuess,true) && !inArr(incorrectCharacters,userGuess,true)){
-                console.log(chosenBandName.includes(String.fromCharCode(userGuess)))
 
                 //If selected letter is in bandName
-                if (chosenBandName.includes(String.fromCharCode(userGuess))){
-                    correctCharacters.push(String.fromCharCode(userGuess))
-                    var index = 0;
+                if (chosenBandName.toUpperCase().includes(userGuess.toUpperCase())){
+                    //Add character to correctCharacters array so user cannot reselect letter
+                    correctCharacters.push(userGuess)
+                    //Clear currentWord field in html document and repopulate with all letters in correctCharacters array
                     populateID("", "currentWord", false)
                     for (var character of chosenBandName) {
-                        
-                        if (correctCharacters.includes(character)){
+                        if (correctCharacters.includes(character.toUpperCase())){
                             populateID(character, "currentWord", true)
+                        }
+                        else if (character === " "){
+                            populateID(" ", "currentWord", true)
                         }
                         else{
                             populateID("_", "currentWord", true)
                         }
-                        // if (chosenBandName.charCodeAt(index) === character){
-                        
-                        // }
-                        
-
-                        if (character.toLowerCase() === String.fromCharCode(userGuess)) {
-                            console.log(index);
-                        }
-                        index++;
                     }
-                    console.log("adding " + String.fromCharCode(userGuess) + " to correctCharacters array")
-                    
                 }
 
                 //If selected letter is not in bandName
                 else{
-                    incorrectCharacters.push(String.fromCharCode(userGuess))
+                    //Add character to incorrectCharacters array so user cannot reselect letter
+                    incorrectCharacters.push(userGuess) ;
+                    //Add character to "guessedCharacters" field on html document
                     if (incorrectCharacters.length != 1){
-                        populateID(",", "guessedCharacters", true)
+                        populateID(", ", "guessedCharacters", true)
                     }
                     populateID(incorrectCharacters[incorrectCharacters.length - 1], "guessedCharacters", true)
+                    //decrement guessesRemaining and update html document
                     guessesRemaining--
                     populateID(guessesRemaining, "guessesRemaining", false)
                 }
-
             }
         }
+    }
+    if (chosenBandName === document.getElementById("currentWord").innerHTML){
+        alert("You did it!!")
     }
 }
 
