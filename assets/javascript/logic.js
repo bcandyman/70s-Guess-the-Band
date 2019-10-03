@@ -12,7 +12,7 @@ var bandNames = [
 ];
 
 var bandSong = {
-    "AC/DC" : "High Voltage",
+    "AC/DC"         : "High Voltage",
     "Black Sabbath" : "Children of the Grave",
     "Deep Purple"   : "Space Truckin'",
     "Iron Maiden"   : "Hallowed Be Thy Name",
@@ -57,6 +57,7 @@ function inArr(arr,char,addToArray){
 function populateID (str, ID, appendMode){
     if (appendMode){
         document.getElementById(ID).innerHTML = document.getElementById(ID).innerHTML + str ;
+        // document.getElementById(ID).innerHTML = document.getElementById(ID).innerHTML + str ;
     }
     else{
         document.getElementById(ID).innerHTML = str ;

@@ -1,8 +1,18 @@
-#currentWord{
-    letter-spacing: 5px ;
+#currentWord {
+	letter-spacing: 5px;
 }
 
-p{
-    height: 30px ;
-    text-align: center ;
+.container {
+	width: 500px;
+	height: 300px;
+	margin: 0 auto;
+}
+
+.carousel-container {
+	padding-top: 30px;
+}
+
+p {
+	height: 30px;
+	text-align: center;
 }
