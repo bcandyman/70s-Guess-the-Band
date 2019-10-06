@@ -2,17 +2,41 @@
 	letter-spacing: 5px;
 }
 
+
 .container {
 	width: 500px;
 	height: 300px;
 	margin: 0 auto;
 }
 
-.carousel-container {
-	padding-top: 30px;
+.my-container{
+    height: 300px;
+    background-color: black;
+    border-bottom: silver solid 1px;
 }
+
+
+.parent-container{
+    max-width: 500px;
+    margin: 30px auto;
+    border: silver solid 2px;
+    position: relative;
+}
+
+#title{
+    position: absolute;
+    top:  70px;
+}
+
+body {
+    background-color: black;
+    background-image: url("../images/Background.jpg");
+    background-repeat: no-repeat;
+}
+
 
 p {
 	height: 30px;
 	text-align: center;
+	color: silver;
 }

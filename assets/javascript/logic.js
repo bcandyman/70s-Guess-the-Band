@@ -1,26 +1,15 @@
 // Variables
-var bandNames = [
-    "AC/DC",
-    "Black Sabbath",
-    "Deep Purple",
-    "Iron Maiden",
-    "Judas Priest",
-    "Led Zeppelin",
-    "Motorhead",
-    "Rainbow",
-    "Rush",
-];
-
-var bandSong = {
-    "AC/DC"         : "High Voltage",
-    "Black Sabbath" : "Children of the Grave",
-    "Deep Purple"   : "Space Truckin'",
-    "Iron Maiden"   : "Hallowed Be Thy Name",
-    "Judas Priest"  : "Victim of Changes",
-    "Led Zeppelin"  : "Black Dog",
-    "Motorhead"     : "No Class",
-    "Rainbow"       : "Man On the Silver Mountain",
-    "Rush"          : "Working Man"
+var bandInfo = {
+// | Band Name               | Music File Name                  | Photo File Name
+    "AC/DC"                  :["High Voltage",                  "ACDC"],
+    "BLACK SABBATH"          :["Children of the Grave",         "BlackSabbath"],
+    "DEEP PURPLE"            :["Space Truckin'",                "DeepPurple"],
+    "IRON MAIDEN"            :["Hallowed Be Thy Name",          "IronMaiden"],
+    "JUDAS PRIEST"           :["Victim of Changes",             "JudasPriest"],
+    "LED ZEPPELIN"           :["Black Dog",                     "LedZeppelin"],
+    "MOTORHEAD"              :["No Class",                      "Motorhead"],
+    "RAINBOW"                :["Man On the Silver Mountain",    "Rainbow"],
+    "RUSH"                   :["Working Man",                   "Rush"],
 }
 
 var chosenBandName;
@@ -56,11 +45,10 @@ function inArr(arr,char,addToArray){
 //str = string to be displayed in html, ID = ID tag in html, appendMode is boolean and adds to end of current content if true
 function populateID (str, ID, appendMode){
     if (appendMode){
-        document.getElementById(ID).innerHTML = document.getElementById(ID).innerHTML + str ;
-        // document.getElementById(ID).innerHTML = document.getElementById(ID).innerHTML + str ;
+        $("#" + ID).html($("#" + ID).html() + str)
     }
     else{
-        document.getElementById(ID).innerHTML = str ;
+        $("#" + ID).html(str)
     }
 }
 
@@ -70,19 +58,27 @@ function clearDocument(){
     chosenBandName = "" ;
     correctCharacters = [] ;
     incorrectCharacters = [] ;
-    guessesRemaining = 6 ;
+    guessesRemaining = 11 ;
     populateID("", "currentWord", false) ;
     populateID("", "guessedCharacters", false) ;
-    populateID("", "guessesRemaining", false) ;
-    document.getElementById("startGame").style.visibility = "initial" ;
-    // x.pause()
+    populateID(guessesRemaining, "guessesRemaining", false) ;
     stopAudio()
+    $("#title").fadeOut();
+    document.getElementById("carousel-container").style.visibility = "hidden" ;
+}
+
+
+function loadCarousel(photoFileName){
+    for(var i =1; i < 4; i++){
+        console.log("Load carousel")
+        $("#carousel-image" + i).attr("src","assets/images/" + photoFileName + "-" + i + ".jpg")
+    }
 }
 
 //Plays audio
 //audioFileName = file name only. Audio files must be in audio folder.
 function playAudio(audioFileName){
-    document.getElementById("myAudio").src = "assets/audio/" + audioFileName + ".mp3"
+    $("#myAudio").attr("src", "assets/audio/" + audioFileName + ".mp3")
     x.volume=1;
     x.play();
 }
@@ -91,7 +87,6 @@ function playAudio(audioFileName){
 function stopAudio(){
     for(i=1;i>0; i-= .01){
         sleep(10) ;
-        console.log(i) ;
         x.volume=i ;
     }
     x.pause()
@@ -107,20 +102,25 @@ function sleep(milliseconds) {
         }
         }
     }
-
+    // $(".carousel-container").hide()
+    document.getElementById("carousel-container").style.visibility = "hidden" ;
 
 //
 document.onkeypress = function(event) {
     //Variable is set to lower case ascii code of keypress
     var userGuessCode = event.key.toUpperCase().charCodeAt(0);
     var userGuess = String.fromCharCode(userGuessCode)
-
+    console.log(Object.keys(bandInfo)[2])
+    // console.log(bandInfo.length)
+    console.log(Object.keys(bandInfo).length)
     //Starts game if not already started
     if (inGame === false && userGuess === " ") {
         clearDocument()
+        // document.getElementById("my-container").style.display="none";
         inGame = true;
         //chooses word to guess
-        chosenBandName = bandNames[Math.floor(Math.random() * bandNames.length)];
+        chosenBandName = Object.keys(bandInfo)[Math.floor(Math.random() * Object.keys(bandInfo).length)];
+        // chosenBandName = bandNames[Math.floor(Math.random() * bandNames.length)];
         //populates underlines and spaces on html document
         for(var i = 0; i < chosenBandName.length; i++){
             if (chosenBandName.charAt(i) === " "){
@@ -168,6 +168,20 @@ document.onkeypress = function(event) {
                             populateID("_", "currentWord", true)
                         }
                     }
+                    if (chosenBandName === document.getElementById("currentWord").innerHTML){
+                        console.log("New" + bandInfo[chosenBandName][0])
+                        playAudio(bandInfo[chosenBandName][0])
+                        loadCarousel(bandInfo[chosenBandName][1])
+                        document.getElementById("carouselExampleFade").setAttribute("data-slide-to","0")
+                        console.log("Show the carousel")
+                        document.getElementById("carousel-container").style.visibility = "visible" ;
+                        wins++
+                        populateID(wins, "wins", false)
+                        inGame = false ;
+                        console.log("Change caption")
+                        document.getElementById("startGame").style.visibility = "visible"
+                        document.getElementById("startGame").innerHTML = "PRESS SPACE BAR TO PLAY AGAIN!!"
+                    }
                 }
 
                 //If selected letter is not in bandName
@@ -179,7 +193,6 @@ document.onkeypress = function(event) {
                         populateID(", ", "guessedCharacters", true)
                     }
                     populateID(incorrectCharacters[incorrectCharacters.length - 1], "guessedCharacters", true)
-                    //decrement guessesRemaining and update html document
                     guessesRemaining-- ;
                     populateID(guessesRemaining, "guessesRemaining", false) ;
                     if (guessesRemaining === 0){
@@ -190,21 +203,4 @@ document.onkeypress = function(event) {
             }
         }
     }
-    if (chosenBandName === document.getElementById("currentWord").innerHTML){
-        console.log(chosenBandName)
-        console.log(bandSong[chosenBandName])
-        playAudio(bandSong[chosenBandName])
-        wins++
-        populateID(wins, "wins", false)
-        inGame = false ;
-        document.getElementById("startGame").style.innerHTML = "PRESS SPACE BAR TO PLAY AGAIN!!"
-        document.getElementById("startGame").style.visibility = "initial"
-
-        // clearDocument()
-        // playAudio(bandSong[chosenBandName])
-    }
 }
-
-// document.getElementById("wins").innerHTML = wins ;
-// document.getElementById("guessesRemaining").innerHTML = guessesRemaining ;
-// document.getElementById("guessedCharacters").innerHTML = guessedCharacters[0] ;
